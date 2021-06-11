@@ -34,7 +34,7 @@ class SequenceElement:
         else:
             self.type = 'glyph'
             self.glyph_names = [self.value]
-        
+
         self.glyph_names = [gn for gn in self.glyph_names if not gn.startswith('@')]
 
     def __repr__(self):
