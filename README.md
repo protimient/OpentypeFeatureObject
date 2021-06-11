@@ -3,7 +3,7 @@ This is a python module to convert Opentype Feature code (à la AFDKO) to python
 
 It is primarily used to subset the code to a specified script, language and/or glyph list.
 
-Currently in a very, very, very Beta stage.
+**Currently in a very, very, very Beta stage.**
 
 Example Usage:
 ```python
