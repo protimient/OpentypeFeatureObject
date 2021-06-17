@@ -22,6 +22,8 @@ class Feature:
 
         if code:
             self.parse_code()
+        
+        self.lookups = dict((x.name, x) for x in self.code_sequence if isinstance(x, Lookup))
 
     def __repr__(self):
         return '<OpentypeObject Feature \'{0}\' with {1} lookups covering scripts {2}>'.format(self.name, len(self.code_sequence), self.scripts)
