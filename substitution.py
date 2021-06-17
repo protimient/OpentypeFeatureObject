@@ -16,6 +16,7 @@ class SequenceElement:
     def __init__(self, element):
         self.name = element
         self.is_target = element[-1] == "'"
+        self.is_context = None
         self.value = element if not self.is_target else element[:-1]
         self.glyph_names = []
 
@@ -35,7 +36,7 @@ class SequenceElement:
             self.type = 'glyph'
             self.glyph_names = [self.value]
 
-        self.glyph_names = [gn for gn in self.glyph_names if not gn.startswith('@')]
+        self.glyph_names = [gn for gn in self.glyph_names if not gn.startswith('@') and gn]
 
     def __repr__(self):
         return '<OpentypeObject SequenceElement \'{0}\' type={1} is_target={2}>'.format(self.value, self.type, self.is_target)
@@ -44,14 +45,19 @@ class SequenceElement:
 class Substitution:
     def __init__(self, code=None, script=None, language=None):
         self.raw_code = code
+
         self.input_sequence = []
         self.output_sequence = []
+
         self.input_glyphs = []
         self.output_glyphs = []
+
         self.all_glyphs = []
+
         self.script = script
         self.language = language
         self.is_chaining = False
+        self.is_contextual = False
 
         if code:
             self.parse_code()
@@ -87,8 +93,7 @@ class Substitution:
             self.output_glyphs += ie.glyph_names
         self.all_glyphs = self.input_glyphs + self.output_glyphs
 
-    @staticmethod
-    def parse_sequence(text_sequence):
+    def parse_sequence(self, text_sequence):
         """
         Takes a string of glyphs or classes and returns a list of sequenceElement objects.
         """
@@ -107,12 +112,20 @@ class Substitution:
             lookup_refs[lookup_ref_placeholder] = lookup_ref
 
         object_sequence = []
+        seen_target = False
         for element in text_sequence.split(' '):
             # element = element.format(**inline_classes)
             element = inline_classes.get(element[1:-1], element)
             element = lookup_refs.get(element[1:-1], element)
             input_element = SequenceElement(element)
+            if input_element.is_target:
+                seen_target = True
             object_sequence.append(input_element)
+
+        if seen_target:
+            self.is_contextual = True
+            for obj in object_sequence:
+                obj.is_context = not obj.is_target
 
         return object_sequence
 
