@@ -22,7 +22,7 @@ class Feature:
 
         if code:
             self.parse_code()
-        
+
         self.lookups = dict((x.name, x) for x in self.code_sequence if isinstance(x, Lookup))
 
     def __repr__(self):
