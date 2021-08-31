@@ -4,8 +4,8 @@ A class to hold a single lookup.
 
 import re
 import copy
-from lookup import Lookup, LookupFlag, InFeatureClass
-from substitution import Substitution
+from .lookup import Lookup, LookupFlag, InFeatureClass
+from .substitution import Substitution
 
 
 class Feature:
@@ -35,10 +35,10 @@ class Feature:
         if self.name is None:
             try:
                 parsed_code = re.search(r'feature (.+?) {(.+)}', self.raw_code, flags=re.DOTALL)
-                self.name = parsed_code.group(1)
-                self.feature_code = parsed_code.group(2)
+                self.name = parsed_code.group(1).strip()
+                self.feature_code = parsed_code.group(2).strip()
             except AttributeError:
-                print('Could not find a feature name in the code.')
+                print('Could not find a feature name in the code. Perhaps you need to pass it in separately e.g. Feature(code=code, name=name)')
                 raise
 
         code_lines = [x.strip() for x in self.feature_code.split('\n') if x.strip()]
@@ -66,7 +66,7 @@ class Feature:
 
             # is a lookup definition
             elif line.startswith('lookup') and line.endswith('{'):
-                lookup_name = re.search(r'lookup (.+?) {', line).group(1)
+                lookup_name = re.search(r'lookup (.+?) {', line).group(1).strip()
                 lookup_end = None
                 for li, l in enumerate(code_lines[i:]):
                     if re.search(r'}} ?{0}.*?;'.format(lookup_name), l):
