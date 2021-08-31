@@ -4,7 +4,7 @@ A class to hold a single lookup.
 
 import re
 import copy
-from substitution import Substitution
+from .substitution import Substitution
 
 
 class InFeatureClass:
@@ -23,8 +23,8 @@ class InFeatureClass:
     def parse_code(self, code):
         parsed_code = re.search(r'(@.+?) = \[(.+?)\]', code)
         if parsed_code:
-            self.name = parsed_code.group(1)
-            self.members = parsed_code.group(2).split(' ')
+            self.name = parsed_code.group(1).strip()
+            self.members = parsed_code.group(2).strip().split(' ')
 
     def write(self, tab_level=0):
         return '{tab}{name} = [{members}];'.format(
@@ -89,16 +89,16 @@ class LookupFlag:
             return
 
         if 'script' in self.code:
-            self.script = re.search(r'script (.+?);', self.code).group(1)
+            self.script = re.search(r'script (.+?);', self.code).group(1).strip()
             return
 
         if 'language' in self.code:
-            self.language = re.search(r'language (.+?);', self.code).group(1)
+            self.language = re.search(r'language (.+?);', self.code).group(1).strip()
             return
 
         lookup_ref_name = re.search(r'lookup (.+?);', self.code)
         if lookup_ref_name is not None:
-            self.lookup_reference = lookup_ref_name.group(1)
+            self.lookup_reference = lookup_ref_name.group(1).strip()
 
     def write(self, tab_level=0):
         return '{tab}{code}'.format(tab='\t' * tab_level, code=self.code)
@@ -149,8 +149,8 @@ class Lookup:
         if self.name is None:
             try:
                 parsed_code = re.search(r'lookup (.+?) {(.+?)}', self.raw_code, flags=re.DOTALL)
-                self.name = parsed_code.group(1)
-                self.lookup_code = parsed_code.group(2)
+                self.name = parsed_code.group(1).strip()
+                self.lookup_code = parsed_code.group(2).strip()
             except AttributeError:
                 return
 
