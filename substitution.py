@@ -114,10 +114,13 @@ class Substitution:
         object_sequence = []
         seen_target = False
         for element in text_sequence.split(' '):
+            if not element:
+                continue
             # element = element.format(**inline_classes)
             element = inline_classes.get(element[1:-1], element)
             element = lookup_refs.get(element[1:-1], element)
             input_element = SequenceElement(element)
+
             if input_element.is_target:
                 seen_target = True
             object_sequence.append(input_element)
