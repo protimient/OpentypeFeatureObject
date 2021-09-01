@@ -38,9 +38,6 @@ class InFeatureClass:
         if all([x is None for x in [scripts, languages, glyphs]]):
             return new
 
-        if all([x is None for x in [scripts, languages, glyphs]]):
-            return new
-
         if scripts and self.script not in scripts:
             return
 
