@@ -158,11 +158,16 @@ class Substitution:
         if all([x is None for x in [scripts, languages, glyphs]]):
             return new
 
-        if scripts and self.script not in scripts:
-            return
+        if scripts:
+            if type(scripts) == str:
+                scripts = scripts.split(' ')
 
-        if languages and self.language not in languages:
-            return
+            if self.script not in scripts:
+                return
+
+        if languages:
+            if self.language not in languages:
+                return
 
         if glyphs:
             if not isinstance(glyphs, list):
